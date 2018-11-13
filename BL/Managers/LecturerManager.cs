@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Model.Models;
+using Data.Repositories.Interfaces;
+using BL.Managers.Interfaces;
+using Model.Dtos;
+using Data.Repositories;
+using AutoMapper;
+namespace BL.Managers
+{
+    public class LecturerManager : ILecturerManager
+    {
+        private ILecturerRepository _lecturerRepository;
+        private ILecturerCourseRepository _lecturerCourseRepository;
+
+        public LecturerManager(ILecturerRepository lecturerRepository, ILecturerCourseRepository lecturerCourseRepository)
+        {
+            _lecturerRepository = lecturerRepository;
+            _lecturerCourseRepository = lecturerCourseRepository;
+        }
+
+        public LecturerCreatedDto CreateLecturer(Lecturer lecturer)
+        {
+           if(_lecturerRepository.Records.Any(x=>x.Email == lecturer.Email || x.StaffNumber == lecturer.StaffNumber))
+            {
+                var createdLecturer = Mapper.Map<Lecturer, LecturerCreatedDto>(lecturer);
+                createdLecturer.IsAvailable = false;
+                return createdLecturer;
+            }
+            else
+            {
+                lecturer = _lecturerRepository.Add(lecturer);
+                var createdLecturer = Mapper.Map<Lecturer, LecturerCreatedDto>(lecturer);
+                createdLecturer.IsAvailable = true;
+                return createdLecturer;
+            }
+        }
+
+        public bool Delete(int id)
+        {
+            if (_lecturerRepository.Records.Any(x => x.Id == id))
+            {
+                _lecturerRepository.Delete(_lecturerRepository.GetById(id));
+                var courses = _lecturerCourseRepository.Records.Where(x => x.CourseId == id);
+                foreach (var course in courses)
+                {
+                    _lecturerCourseRepository.Delete(course);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public IEnumerable<Lecturer> GetAll()
+        {
+            return _lecturerRepository.GetAll();
+        }
+
+        public Lecturer GetLecturerById(int id)
+        {
+            return (_lecturerRepository.GetById(id) == null) ? null : _lecturerRepository.GetById(id);
+        }
+
+        public Lecturer Update(int id, Lecturer lecturer)
+        {
+            lecturer.Id = id;
+            return _lecturerRepository.Update(lecturer);
+        }
+
+        public bool Any(int id)
+        {
+            return _lecturerRepository.Records.Any(x => x.Id == id);
+        }
+
+        public LecturerCourse AddToCourse(int id, Course course)
+        {
+            var lecturerCourse = new LecturerCourse
+            {
+                CourseId = course.Id,
+                LecturerId = id
+            };
+
+            lecturerCourse = _lecturerCourseRepository.Add(lecturerCourse);
+            return lecturerCourse;
+        }
+    }
+}
