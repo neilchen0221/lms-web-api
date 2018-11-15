@@ -78,16 +78,25 @@ namespace BL.Managers
             return _lecturerRepository.Records.Any(x => x.Id == id);
         }
 
-        public LecturerCourse AddToCourse(int id, Course course)
+        public LecturerCourse AddToCourse(int lecturerId, int courseId)
         {
             var lecturerCourse = new LecturerCourse
             {
-                CourseId = course.Id,
-                LecturerId = id
+                CourseId = courseId,
+                LecturerId = lecturerId
             };
 
             lecturerCourse = _lecturerCourseRepository.Add(lecturerCourse);
             return lecturerCourse;
+        }
+
+        public void RemoveFromCourse(int lecturerId, int courseId)
+        {
+            var lecturerCourse = _lecturerCourseRepository.Records.FirstOrDefault(x => x.LecturerId == lecturerId && x.CourseId == courseId);
+            if (lecturerCourse != null)
+            {
+                _lecturerCourseRepository.Delete(lecturerCourse);
+            }
         }
     }
 }
