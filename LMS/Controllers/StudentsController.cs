@@ -10,7 +10,7 @@ using Model.Dtos;
 
 namespace LMS.Controllers
 {
-    
+    [Authorize]
     public class StudentsController : ApiController
     {
         private IStudentManager _studentManager;
@@ -117,27 +117,27 @@ namespace LMS.Controllers
 
         //
         [HttpPost]
-        [Route("api/student/addToCourse/{id}")]
-        public IHttpActionResult AddToCourse(int id, [FromBody]Course course)
+        [Route("api/students/enrollcourse")]
+        public IHttpActionResult AddToCourse(int studentId, int courseId)
         {
             try
             {
-                if (!_studentManager.Any(id))
+                if (!_studentManager.Any(studentId))
                 {
                     return BadRequest("Student Not Found.");
                 }
-                else if (!_courseManager.Any(course.Id))
+                else if (!_courseManager.Any(courseId))
                 {
                     return BadRequest("Course Not Found.");
                 }
-                else if (!_studentManager.StudentCanEnroll(id) || !_studentManager.CourseCanTakeStudent(course.Id))
+                else if (!_studentManager.StudentCanEnroll(studentId) || !_studentManager.CourseCanTakeStudent(courseId))
                 {
                     string message = "";
-                    if (!_studentManager.StudentCanEnroll(id))
+                    if (!_studentManager.StudentCanEnroll(studentId))
                     {
-                        message += $"Student has not enough credits.{Environment.NewLine}";
+                        message += $"Student does not have enough credits.{Environment.NewLine}";
                     }
-                    if (!_studentManager.CourseCanTakeStudent(course.Id))
+                    if (!_studentManager.CourseCanTakeStudent(courseId))
                     {
                         message += "Course has reach the max student limit.";
                     }
@@ -145,13 +145,21 @@ namespace LMS.Controllers
                 }
                 else
                 {
-                    return Ok(_studentManager.AddToCourse(id, course));
+                    return Ok(_studentManager.AddToCourse(studentId, courseId));
                 }
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost]
+        [Route("api/students/cancelcourse")]
+        public IHttpActionResult CancelCourse(int studentId, int courseId)
+        {
+            _studentManager.CancelCourse(studentId, courseId);
+            return Ok();
         }
     }
 }
