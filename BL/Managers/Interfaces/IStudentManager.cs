@@ -18,8 +18,9 @@ namespace BL.Managers.Interfaces
         StudentDto Update(int id, Student student);
         bool Any(int id);
         bool EmailDuplicate(Student student);
-        StudentCourse AddToCourse(int id, Course course);
+        StudentCourse AddToCourse(int studentId, int courseId );
         bool StudentCanEnroll(int studentId);
         bool CourseCanTakeStudent(int courseId);
+        void CancelCourse(int studentId, int courseId);
     }
 }
