@@ -15,6 +15,7 @@ namespace BL.Managers.Interfaces
         Lecturer Update(int id, Lecturer lecturer);
         LecturerCreatedDto CreateLecturer(Lecturer lecturer);
         bool Any(int id);
-        LecturerCourse AddToCourse(int id, Course course);
+        LecturerCourse AddToCourse(int lecturerId, int courseId);
+        void RemoveFromCourse(int lecturerId, int courseId);
     }
 }
