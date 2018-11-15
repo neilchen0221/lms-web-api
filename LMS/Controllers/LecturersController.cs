@@ -10,6 +10,7 @@ using BL.Managers.Interfaces;
 
 namespace LMS.Controllers
 {
+    [Authorize]
     public class LecturersController : ApiController
     {
         private ILecturerManager _lecturerManager;
@@ -105,14 +106,14 @@ namespace LMS.Controllers
         }
 
         [HttpPost]
-        [Route("api/Lecturers/addToCourse")]
-        public IHttpActionResult AddToCourse(int id, [FromBody]Course course)
+        [Route("api/Lecturers/teachcourse")]
+        public IHttpActionResult AddToCourse(int lecturerId, int courseId)
         {
             try
             {
-                if (_lecturerManager.Any(id) && _courseManager.Any(course.Id))
+                if (_lecturerManager.Any(lecturerId) && _courseManager.Any(courseId))
                 {
-                    return Ok(_lecturerManager.AddToCourse(id, course));
+                    return Ok(_lecturerManager.AddToCourse(lecturerId, courseId));
                 }
                 else
                 {
@@ -123,6 +124,14 @@ namespace LMS.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost]
+        [Route("api/Lecturers/unteachcourse")]
+        public IHttpActionResult RemoveFromCourse(int lecturerId, int courseId)
+        {
+            _lecturerManager.RemoveFromCourse(lecturerId, courseId);
+            return Ok();
         }
     }
 }
