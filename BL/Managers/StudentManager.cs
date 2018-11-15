@@ -114,16 +114,16 @@ namespace BL.Managers
             return result;
         }
 
-        public StudentCourse AddToCourse(int id, Course course)
+        public StudentCourse AddToCourse(int studentId, int courseId)
         {
-            var student = _studentRepository.GetById(id);
+            var student = _studentRepository.GetById(studentId);
             student.Credit -= 4;
             _studentRepository.Update(student);
 
             var studentCourse = new StudentCourse
             {
-                CourseId = course.Id,
-                StudentId = id
+                CourseId = courseId,
+                StudentId = studentId
             };
 
             studentCourse = _studentCourseRepository.Add(studentCourse);
@@ -148,6 +148,18 @@ namespace BL.Managers
             return _studentRepository.Records.Any(x => x.Email == student.Email);
         }
 
+        public void CancelCourse(int studentId, int courseId)
+        {
+            var studentCourse = _studentCourseRepository.Records.FirstOrDefault(x => x.StudentId == studentId && x.CourseId == courseId);
+
+            if (studentCourse != null)
+            {
+                var student = _studentRepository.GetById(studentId);
+                student.Credit += 4;
+                _studentRepository.Update(student);
+                _studentCourseRepository.Delete(studentCourse);
+            }
+        }
     }
 }
 
