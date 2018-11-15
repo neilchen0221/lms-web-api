@@ -9,6 +9,7 @@ using BL.Managers.Interfaces;
 
 namespace LMS.Controllers
 {
+    [Authorize]
     public class CoursesController : ApiController
     {
         private ICourseManager _courseManager;
