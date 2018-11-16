@@ -38,28 +38,5 @@ namespace BL.UnitTest
             Assert.Equal(expectedResult, hashPassword);
         }
 
-        [Fact]
-        public void TestAddToCourse()
-        {
-            var studentRepo = Substitute.For<IStudentRepository>();
-            var studentCourseRepo = Substitute.For<IStudentCourseRepository>();
-            var courseRepo = Substitute.For<ICourseRepository>();
-            var student = new Student
-            {
-                Id = 1,
-                Credit = 16
-            };
-            var course = new Course
-            {
-                Id = 1,
-            };
-            
-            studentRepo.GetById(1).Returns(student);
-
-            var studentManager = new StudentManager(studentRepo,studentCourseRepo,courseRepo);
-            studentManager.AddToCourse(1, course);
-
-            Assert.Equal(12, student.Credit);
-        }
     }
 }
