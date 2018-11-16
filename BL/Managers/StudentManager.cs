@@ -44,12 +44,12 @@ namespace BL.Managers
         {
             if (_studentRepository.Records.Any(x => x.Id == id))
             {
-                _studentRepository.Delete(_studentRepository.GetById(id));
-                var courses = _studentCourseRepository.Records.Where(x => x.StudentId == id);
+                var courses = _studentCourseRepository.Records.Where(x => x.StudentId == id).ToList();
                 foreach (var course in courses)
                 {
                     _studentCourseRepository.Delete(course);
                 }
+                _studentRepository.Delete(_studentRepository.GetById(id));
                 return true;
             }
             else
@@ -159,6 +159,22 @@ namespace BL.Managers
                 _studentRepository.Update(student);
                 _studentCourseRepository.Delete(studentCourse);
             }
+        }
+
+        public IEnumerable<CourseDisplayDto> getStudentCourse(int studentId)
+        {
+            var studentCourses = _studentCourseRepository.Records.Where(x => x.StudentId == studentId).ToList();
+
+            var courseList = new List<Course>();
+            foreach(var studentCourse in studentCourses)
+            {
+                var course = _courseRepository.GetById(studentCourse.CourseId);
+                courseList.Add(course);
+            }
+
+            var courseDiplayList = Mapper.Map<List<Course>, List<CourseDisplayDto>>(courseList);
+
+            return courseDiplayList;
         }
     }
 }
