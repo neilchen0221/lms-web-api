@@ -36,8 +36,8 @@ namespace BL.Managers
         {
             if(_courseRepository.Records.Any(x=>x.Id == id))
             {
-                _courseRepository.Delete(_courseRepository.GetById(id));
-                var studentCourse = _studentCourseRepository.Records.Where(x => x.CourseId == id);
+                
+                var studentCourse = _studentCourseRepository.Records.Where(x => x.CourseId == id).ToList();
                 foreach (var item in studentCourse)
                 {
                     var student = _studentRepository.GetById(item.StudentId);
@@ -45,12 +45,13 @@ namespace BL.Managers
                     _studentRepository.Update(student);
                     _studentCourseRepository.Delete(item);
                 }
-                var lecturerCourse = _lecturerCourseRepository.Records.Where(x => x.CourseId == id);
+                var lecturerCourse = _lecturerCourseRepository.Records.Where(x => x.CourseId == id).ToList();
                 foreach (var item in lecturerCourse)
                 {
                     _lecturerCourseRepository.Delete(item);
 
                 }
+                _courseRepository.Delete(_courseRepository.GetById(id));
                 return true;
             }
             else
