@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dtos\CourseDisplayDto.cs" />
     <Compile Include="Dtos\LecturerCreatedDto.cs" />
     <Compile Include="Dtos\SearchAttribute.cs" />
     <Compile Include="Dtos\StudentCreatedDto.cs" />
