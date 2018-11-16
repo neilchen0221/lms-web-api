@@ -43,12 +43,12 @@ namespace BL.Managers
         {
             if (_lecturerRepository.Records.Any(x => x.Id == id))
             {
-                _lecturerRepository.Delete(_lecturerRepository.GetById(id));
-                var courses = _lecturerCourseRepository.Records.Where(x => x.CourseId == id);
+                var courses = _lecturerCourseRepository.Records.Where(x => x.CourseId == id).ToList();
                 foreach (var course in courses)
                 {
                     _lecturerCourseRepository.Delete(course);
                 }
+                _lecturerRepository.Delete(_lecturerRepository.GetById(id));
                 return true;
             }
             else
