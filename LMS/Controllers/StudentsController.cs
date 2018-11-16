@@ -115,7 +115,6 @@ namespace LMS.Controllers
             }
         }
 
-        //
         [HttpPost]
         [Route("api/students/enrollcourse")]
         public IHttpActionResult AddToCourse(int studentId, int courseId)
@@ -160,6 +159,13 @@ namespace LMS.Controllers
         {
             _studentManager.CancelCourse(studentId, courseId);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/studentcourse/{studentId}")]
+        public IHttpActionResult getStudentCourse(int studentId)
+        {
+            return Ok(_studentManager.getStudentCourse(studentId));
         }
     }
 }
