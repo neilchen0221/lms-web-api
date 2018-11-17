@@ -15,11 +15,13 @@ namespace BL.Managers
     {
         private ILecturerRepository _lecturerRepository;
         private ILecturerCourseRepository _lecturerCourseRepository;
+        private ICourseRepository _courseRepository;
 
-        public LecturerManager(ILecturerRepository lecturerRepository, ILecturerCourseRepository lecturerCourseRepository)
+        public LecturerManager(ILecturerRepository lecturerRepository, ILecturerCourseRepository lecturerCourseRepository,ICourseRepository courseRepository)
         {
             _lecturerRepository = lecturerRepository;
             _lecturerCourseRepository = lecturerCourseRepository;
+            _courseRepository = courseRepository;
         }
 
         public LecturerCreatedDto CreateLecturer(Lecturer lecturer)
@@ -97,6 +99,22 @@ namespace BL.Managers
             {
                 _lecturerCourseRepository.Delete(lecturerCourse);
             }
+        }
+
+        public IEnumerable<CourseDisplayDto> GetLecturerCourse(int lecturerId)
+        {
+            var lecturerCourses = _lecturerCourseRepository.Records.Where(x => x.LecturerId == lecturerId).ToList();
+
+            var courseList = new List<Course>();
+            foreach (var lecturerCourse in lecturerCourses)
+            {
+                var course = _courseRepository.GetById(lecturerCourse.CourseId);
+                courseList.Add(course);
+            }
+
+            var courseDiplayList = Mapper.Map<List<Course>, List<CourseDisplayDto>>(courseList);
+
+            return courseDiplayList;
         }
     }
 }

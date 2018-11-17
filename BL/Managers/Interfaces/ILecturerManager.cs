@@ -17,5 +17,6 @@ namespace BL.Managers.Interfaces
         bool Any(int id);
         LecturerCourse AddToCourse(int lecturerId, int courseId);
         void RemoveFromCourse(int lecturerId, int courseId);
+        IEnumerable<CourseDisplayDto> GetLecturerCourse(int lecturerId);
     }
 }
