@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using BL.Managers.Interfaces;
 using Model.Models;
+using Model.Dtos;
 using Data.Repositories.Interfaces;
+using AutoMapper;
+
 namespace BL.Managers
 {
     public class CourseManager : ICourseManager
@@ -14,16 +17,19 @@ namespace BL.Managers
         private ILecturerCourseRepository _lecturerCourseRepository;
         private IStudentCourseRepository _studentCourseRepository;
         private IStudentRepository _studentRepository;
+        private ILecturerRepository _lecturerRepository;
 
-        public CourseManager(ICourseRepository courseRepository, 
-                             IStudentCourseRepository studentCourseRepository, 
+        public CourseManager(ICourseRepository courseRepository,
+                             IStudentCourseRepository studentCourseRepository,
                              ILecturerCourseRepository lecturerCourseRepository,
-                             IStudentRepository studentRepository)
+                             IStudentRepository studentRepository,
+                             ILecturerRepository lecturerRepository)
         {
             _courseRepository = courseRepository;
             _studentCourseRepository = studentCourseRepository;
             _lecturerCourseRepository = lecturerCourseRepository;
             _studentRepository = studentRepository;
+            _lecturerRepository = lecturerRepository;
         }
 
         public Course CreateCourse(Course course)
@@ -34,9 +40,9 @@ namespace BL.Managers
 
         public bool DeleteCourse(int id)
         {
-            if(_courseRepository.Records.Any(x=>x.Id == id))
+            if (_courseRepository.Records.Any(x => x.Id == id))
             {
-                
+
                 var studentCourse = _studentCourseRepository.Records.Where(x => x.CourseId == id).ToList();
                 foreach (var item in studentCourse)
                 {
@@ -76,9 +82,39 @@ namespace BL.Managers
             return _courseRepository.Update(course);
         }
 
-        public bool Any (int id)
+        public bool Any(int id)
         {
             return _courseRepository.Records.Any(x => x.Id == id);
+        }
+
+        public IEnumerable<StudentDto> GetCourseStudent(int courseId)
+        {
+            var studentCourses = _studentCourseRepository.Records.Where(x => x.CourseId == courseId).ToList();
+
+            var studentList = new List<Student>();
+            foreach (var studentCourse in studentCourses)
+            {
+                var student = _studentRepository.GetById(studentCourse.StudentId);
+                studentList.Add(student);
+            }
+
+            var studentDiplayList = Mapper.Map<List<Student>, List<StudentDto>>(studentList);
+
+            return studentDiplayList;
+        }
+
+        public IEnumerable<Lecturer> GetCourseLecturer(int courseId)
+        {
+            var lecturerCourses = _lecturerCourseRepository.Records.Where(x => x.CourseId == courseId).ToList();
+
+            var lecturerList = new List<Lecturer>();
+            foreach (var lecturerCourse in lecturerCourses)
+            {
+                var lecturer = _lecturerRepository.GetById(lecturerCourse.LecturerId);
+                lecturerList.Add(lecturer);
+            }
+
+            return lecturerList;
         }
     }
 }
