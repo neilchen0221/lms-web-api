@@ -133,5 +133,12 @@ namespace LMS.Controllers
             _lecturerManager.RemoveFromCourse(lecturerId, courseId);
             return Ok();
         }
+
+        [HttpGet]
+        [Route("api/lecturercourse/{lecturerId}")]
+        public IHttpActionResult GetLecturerCourse(int lecturerId)
+        {
+            return Ok(_lecturerManager.GetLecturerCourse(lecturerId));
+        }
     }
 }
