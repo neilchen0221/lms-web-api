@@ -163,9 +163,9 @@ namespace LMS.Controllers
 
         [HttpGet]
         [Route("api/studentcourse/{studentId}")]
-        public IHttpActionResult getStudentCourse(int studentId)
+        public IHttpActionResult GetStudentCourse(int studentId)
         {
-            return Ok(_studentManager.getStudentCourse(studentId));
+            return Ok(_studentManager.GetStudentCourse(studentId));
         }
     }
 }
