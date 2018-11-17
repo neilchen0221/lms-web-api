@@ -161,7 +161,7 @@ namespace BL.Managers
             }
         }
 
-        public IEnumerable<CourseDisplayDto> getStudentCourse(int studentId)
+        public IEnumerable<CourseDisplayDto> GetStudentCourse(int studentId)
         {
             var studentCourses = _studentCourseRepository.Records.Where(x => x.StudentId == studentId).ToList();
 

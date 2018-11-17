@@ -22,6 +22,6 @@ namespace BL.Managers.Interfaces
         bool StudentCanEnroll(int studentId);
         bool CourseCanTakeStudent(int courseId);
         void CancelCourse(int studentId, int courseId);
-        IEnumerable<CourseDisplayDto> getStudentCourse(int studentId);
+        IEnumerable<CourseDisplayDto> GetStudentCourse(int studentId);
     }
 }
