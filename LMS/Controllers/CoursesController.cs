@@ -100,5 +100,19 @@ namespace LMS.Controllers
             }
 
         }
+
+        [HttpGet]
+        [Route("api/coursestudent/{courseId}")]
+        public IHttpActionResult GetCourseStudent(int courseId)
+        {
+            return Ok(_courseManager.GetCourseStudent(courseId));
+        }
+
+        [HttpGet]
+        [Route("api/courselecturer/{courseId}")]
+        public IHttpActionResult getCourseLecturer(int courseId)
+        {
+            return Ok(_courseManager.GetCourseLecturer(courseId));
+        }
     }
 }
